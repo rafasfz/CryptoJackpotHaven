@@ -17,7 +17,12 @@ contract CryptoJackpotHaven {
 
     enum RouleteChoices{ GREEN, RED, BLACK }
 
-    function roulete(RouleteChoices choice) payable public returns (bool) {
+    struct OutputsRoulete {
+        uint number;
+        uint winValue;
+    }
+
+    function roulete(RouleteChoices choice) payable public returns (OutputsRoulete memory) {
         uint betValue = msg.value;
         require(betValue > 0, "You need to bet something");
 
@@ -33,28 +38,32 @@ contract CryptoJackpotHaven {
 
         uint random = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender))) % 37;
 
+        OutputsRoulete memory output = OutputsRoulete(random, 0);
+        uint winValue = 0;
+
         if (choice == RouleteChoices.GREEN) {
             if (random == greenNumbers[0]) {
-                balance[msg.sender] += betValue * 14;
-                return true;
+                winValue = betValue * 14;
+                winValue += betValue * 14;
             }
         } else if (choice == RouleteChoices.RED) {
             for (uint i = 0; i < redNumbers.length; i++) {
                 if (random == redNumbers[i]) {
-                    balance[msg.sender] += betValue * 2;
-                    return true;
+                    winValue += betValue * 2;
                 }
             }
         } else if (choice == RouleteChoices.BLACK) {
             for (uint i = 0; i < blackNumbers.length; i++) {
                 if (random == blackNumbers[i]) {
-                    balance[msg.sender] += betValue * 2;
-                    return true;
+                    winValue += betValue * 2;
                 }
             }
         }
 
-        return false;
-    }
+        balance[msg.sender] += winValue;
+        output.winValue = winValue;
 
+        return output;
+    }
+    
 }
