@@ -1,33 +1,81 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import logo from './assets/logo.png'
+import { Roulete } from './games/roulete'
+import { useState } from 'react'
+import { MetaMaskInpageProvider } from "@metamask/providers";
+import { ethers } from 'ethers';
 
+declare global {
+  interface Window{
+    ethereum?:MetaMaskInpageProvider
+  }
+}
 function App() {
-  const [count, setCount] = useState(0)
+  const [accountWallet, setAccountWallet] = useState<string | null>(null)
+
+  async function requestAccount() {
+    if(!window.ethereum) {
+      return;
+    }
+  
+    try {
+      const accounts = await window.ethereum.request({ 
+        method: 'eth_requestAccounts' 
+      });
+
+      setAccountWallet(accounts[0])
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async function connectWallet() {
+    if(typeof window.ethereum !== 'undefined') {
+      await requestAccount()
+
+      const provider = new ethers.BrowserProvider(window.ethereum)
+
+      console.log(provider)
+    }
+  }
+
+  function accountWalletFormatted() {
+    if(!accountWallet) {
+      return  
+    }
+
+    return `${accountWallet.substr(0, 6)}...${accountWallet.substr(accountWallet.length - 4, accountWallet.length)}`
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <nav className="navbar navbar-default navbar-expand-lg fixed-top custom-navbar">
+        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="icon ion-md-menu"></span>
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+        <img src={logo} className="img-fluid nav-logo-mobile" alt="Company Logo" />
+        <div className="collapse navbar-collapse" id="navbarNavDropdown">
+          <div className="container">
+            <img src={logo} className="img-fluid nav-logo-desktop" alt="Company Logo" />
+            <ul className="navbar-nav ml-auto nav-right" data-easing="easeInOutExpo" data-speed="1250" data-offset="65">
+              <li className="nav-item nav-custom-link">
+                <a className="nav-link">Roulete <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
+              </li>
+              <li className="nav-item nav-custom-link">
+                <a className="nav-link">Slot Machine <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
+              </li>
+              <li className="nav-item nav-custom-link">
+                <a className="nav-link">Spin <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
+              </li>
+              <li className="nav-item nav-custom-link">
+                {accountWallet ? <span className="nav-link">Wallet address: {accountWalletFormatted()}</span> : <button className="nav-link" onClick={connectWallet}>Join with Metamask <i className="icon ion-ios-arrow-forward icon-mobile"></i></button>}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <Roulete />
     </>
   )
 }
