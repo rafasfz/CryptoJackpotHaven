@@ -1,0 +1,265 @@
+*{
+	box-sizing:border-box;
+}
+
+body{
+	margin:0;
+	padding:0;
+	background-color: #34495e;
+	display:flex;
+	align-items:center;
+	justify-content: center;
+	height:100vh;
+	overflow:hidden;
+}
+
+.roulette-container{
+	width:500px;
+	height:500px;
+	background-color: #ccc;
+	border-radius:50%;
+	border:15px solid #000;
+	position: relative;
+	overflow: hidden;
+	transition: 5s;
+}
+
+.roulette-container div{
+	height:50%;
+	width:46px;
+	position: absolute;
+	clip-path: polygon(100% 0 , 50% 100% , 0 0 );
+	transform:translateX(-50%);
+	transform-origin:bottom;
+	text-align:center;
+	display:'inline-block';
+	align-items: center;
+	justify-content: center;
+	font-size:16px;
+	font-weight:bold;
+	font-family:sans-serif;
+	color:#fff;
+	left:212px;
+}
+
+.roulette-container .zero{
+	background-color: green;
+	left:50%;
+}
+.roulette-container .thirty-two{
+	background-color: red;
+	transform: rotate(calc(360deg/37));
+}
+
+.roulette-container .fifteen{
+    background-color: black;
+    transform: rotate(calc(360deg/37*2));
+}
+
+.roulette-container .nineteen{
+    background-color: red;
+    transform: rotate(calc(360deg/37*3));
+}
+
+.roulette-container .four{
+    background-color: black;
+    transform: rotate(calc(360deg/37*4));
+}
+
+.roulette-container .twenty-one{
+    background-color: red;
+    transform: rotate(calc(360deg/37*5));
+}
+
+.roulette-container .two{
+    background-color: black;
+    transform: rotate(calc(360deg/37*6));
+}
+
+.roulette-container .twenty-five{
+    background-color: red;
+    transform: rotate(calc(360deg/37*7));
+}
+
+.roulette-container .seventeen{
+    background-color: black;
+    transform: rotate(calc(360deg/37*8));
+}
+
+.roulette-container .thirty-four{
+    background-color: red;
+    transform: rotate(calc(360deg/37*9));
+}
+
+.roulette-container .six{
+    background-color: black;
+    transform: rotate(calc(360deg/37*10));
+}
+
+.roulette-container .twenty-seven{
+    background-color: red;
+    transform: rotate(calc(360deg/37*11));
+}
+
+.roulette-container .thirteen{
+    background-color: black;
+    transform: rotate(calc(360deg/37*12));
+}
+
+.roulette-container .thirty-six{
+    background-color: red;
+    transform: rotate(calc(360deg/37*13));
+}
+
+.roulette-container .eleven{
+    background-color: black;
+    transform: rotate(calc(360deg/37*14));
+}
+
+.roulette-container .thirty{
+    background-color: red;
+    transform: rotate(calc(360deg/37*15));
+}
+
+.roulette-container .eight{
+    background-color: black;
+    transform: rotate(calc(360deg/37*16));
+}
+
+.roulette-container .twenty-three{
+    background-color: red;
+    transform: rotate(calc(360deg/37*17));
+}
+
+.roulette-container .ten{
+    background-color: black;
+    transform: rotate(calc(360deg/37*18));
+}
+
+.roulette-container .five{
+    background-color: red;
+    transform: rotate(calc(360deg/37*19));
+}
+
+.roulette-container .twenty-four{
+    background-color: black;
+    transform: rotate(calc(360deg/37*20));
+}
+
+.roulette-container .sixteen{
+    background-color: red;
+    transform: rotate(calc(360deg/37*21));
+}
+
+.roulette-container .thirty-three{
+    background-color: black;
+    transform: rotate(calc(360deg/37*22));
+}
+
+.roulette-container .one{
+    background-color: red;
+    transform: rotate(calc(360deg/37*23));
+}
+
+.roulette-container .twenty{
+    background-color: black;
+    transform: rotate(calc(360deg/37*24));
+}
+
+.roulette-container .fourteen{
+    background-color: red;
+    transform: rotate(calc(360deg/37*25));
+}
+
+.roulette-container .thirty-one{
+    background-color: black;
+    transform: rotate(calc(360deg/37*26));
+}
+
+.roulette-container .nine{
+    background-color: red;
+    transform: rotate(calc(360deg/37*27));
+}
+
+.roulette-container .twenty-two{
+    background-color: black;
+    transform: rotate(calc(360deg/37*28));
+}
+
+.roulette-container .eighteen{
+    background-color: red;
+    transform: rotate(calc(360deg/37*29));
+}
+
+.roulette-container .twenty-nine{
+    background-color: black;
+    transform: rotate(calc(360deg/37*30));
+}
+
+.roulette-container .seven{
+    background-color: red;
+    transform: rotate(calc(360deg/37*31));
+}
+
+.roulette-container .twenty-eight{
+    background-color: black;
+    transform: rotate(calc(360deg/37*32));
+}
+
+.roulette-container .twelve{
+    background-color: red;
+    transform: rotate(calc(360deg/37*33));
+}
+
+.roulette-container .thirty-five{
+    background-color: black;
+    transform: rotate(calc(360deg/37*34));
+}
+
+.roulette-container .three{
+    background-color: red;
+    transform: rotate(calc(360deg/37*35));
+}
+
+.roulette-container .twenty-six{
+    background-color: black;
+    transform: rotate(calc(360deg/37*36));
+}
+
+
+
+
+.arrow{
+	position: absolute;
+	top:29%;
+	left:50%;
+	transform: translateX(-50%);
+	color:#fff;
+    z-index: 10;
+}
+
+.arrow::before{
+	content:"\1F817";
+	font-size:50px;
+}
+
+#spin{
+	position: absolute;
+	top:20%;
+	left:50%;
+	transform:translate(-50%,-50%);
+	z-index:10;
+	background-color: #e2e2e2;
+	text-transform: uppercase;
+	border:8px solid #fff;
+	font-weight:bold;
+	font-size:20px;
+	color:#a2a2a2;
+	width: 80px;
+	height:80px;
+	font-family: sans-serif;
+	border-radius:50%;
+	cursor: pointer;
+	outline:none;
+	letter-spacing: 1px;
+}
