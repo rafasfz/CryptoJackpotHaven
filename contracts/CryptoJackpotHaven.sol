@@ -9,11 +9,16 @@ contract CryptoJackpotHaven {
         owner = msg.sender;
     }
 
+    event RouletteResponse(address winner, uint256 number, uint256 value);
+    event RouletteLost(address loser, uint256 number);
+    event UpdateBallance(address player, uint256 value);
+    
     function withDrawProfits(uint value) public {
         require(msg.sender == owner, "You are not the owner");
         require(value <= address(this).balance, "You are trying to withdraw more than the contract has");
 
         payable(msg.sender).transfer(value);
+        balance[msg.sender] -= value;
     }
 
     mapping (address => uint) balance;
@@ -78,8 +83,16 @@ contract CryptoJackpotHaven {
         }
 
         balance[msg.sender] += winValue;
+        emit UpdateBallance(msg.sender, balance[msg.sender]);
         output.winValue = winValue;
 
+        if (winValue == 0) {
+            emit RouletteLost(msg.sender, random);
+        } else {
+            emit RouletteResponse(msg.sender, random, winValue);
+        }
+
+        
         return output;
     }
 

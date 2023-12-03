@@ -1,51 +1,136 @@
 import { useEffect, useState } from 'react';
 import './styles.css'
+import { ethers } from 'ethers';
+import { toast } from 'react-toastify';
 
-export function Roulete() {
+interface RoueleteProps {
+  provider: ethers.BrowserProvider;
+  signer: ethers.JsonRpcSigner;
+  contract: ethers.Contract;
+  accountWallet: string | null;
+  updateBallance(): Promise<void>;
+}
 
-    const [resultNumber, setResultNumber] = useState<number | null>(null);
+export function Roulete(props: RoueleteProps) {
+
     const [degrees, setDegrees] = useState<number>(0);
-    const degreesPerSegment = 360 / 37; // Divisão de 360 graus pelas 37 casas da roleta
-
-    useEffect(() => {
-        const container = document.querySelector(".roulette-container") as Element;
-        container.style.transform = resultNumber !== null ? `rotate(${calculateRotation()}deg)` : `rotate(${degrees}deg)`;
-        container.style.transition = 'transform 10s ease-in-out';
-    }, [degrees, resultNumber]);
-
-    useEffect(() => {
-      spinRoullete();
-    })
-
-
-    function calculateRotation() {
-        if (resultNumber !== null) {
-            // Se resultNumber estiver definido, calculamos os graus para posicionar esse número no topo
-            const rotation = 360 - (resultNumber * degreesPerSegment) + degreesPerSegment / 2;
-            return rotation;
-        }
-        return degrees;
+    const [valueRoulete, setValueRoulete] = useState<number>(0);
+    const [resultText, setResultText] = useState<string>('');
+    const degreesByNumber = {
+      0: 0,
+      32: 36,
+      15: 35,
+      19: 34,
+      4: 33,
+      21: 32,
+      2: 31,
+      25: 30,
+      17: 29,
+      34: 28,
+      6: 27,
+      27: 26,
+      13: 25,
+      36: 24,
+      11: 23,
+      30: 22,
+      8: 21,
+      23: 20,
+      10: 19,
+      5: 18,
+      24: 17,
+      16: 16,
+      33: 15,
+      1: 14,
+      20: 13,
+      14: 12,
+      31: 11,
+      9: 10,
+      22: 9,
+      18: 8,
+      29: 7,
+      7: 6,
+      28: 6,
+      12: 4,
+      35: 3,
+      3: 2,
+      26: 1,
     }
+
+    useEffect(() => {
+      const container = document.querySelector(".roulette-container") as Element;
+      container.style.transform = `rotate(${degrees}deg)`;
+      container.style.transition = 'transform 2s ease-in-out';
+  }, [degrees]);
 
     function spinRoullete() {
-        if (resultNumber === null) {
-            setDegrees(prevDegrees => {
-                const newDegrees = prevDegrees + 50000;
-                console.log(newDegrees);
-                return newDegrees;
-            });
-            // Aqui você pode adicionar lógica para definir resultNumber, dependendo do estado da sua aplicação.
-        }
+          setDegrees(prevDegrees => {
+              const newDegrees = prevDegrees + 20000;
+              return newDegrees;
+          });
     }
 
-    async function spin() {
-      setResultNumber(1);
+
+    async function spin(target: number) {
+      const totalRotationTime = 1000;
+      const targetDegree = degreesByNumber[target] as number;
+      
+      const startTime = Date.now();
+    
+      const rotate = () => {
+        const elapsedTime = Date.now() - startTime;
+        if (elapsedTime < totalRotationTime) {
+          spinRoullete();
+          requestAnimationFrame(rotate);
+        } else {
+          setDegrees(targetDegree * (360 / 37));
+        }
+      };
+    
+      rotate();
+    }
+
+    useEffect(() => {
+      if (props.contract) {
+        props.contract.on("RouletteResponse", async (winner, number, value) => {
+          if (winner.toLocaleLowerCase() == props.accountWallet.toLowerCase()) {
+            await spin(number);
+            setResultText('')
+            setTimeout(async () => {
+              setResultText(`You won ${ethers.formatEther(value)} ETH`);
+              await props.updateBallance();
+            }, 5000)
+          }
+        })
+      }
+    }, [props])
+
+    useEffect(() => {
+      if (props.contract) {
+        props.contract.on("RouletteLost", async (loser, number) => {
+          if (loser.toLowerCase() == props.accountWallet.toLowerCase()) {
+            await spin(number);
+            await props.updateBallance();
+            setResultText('')
+            setTimeout(() => {
+              setResultText(`You lost :(`);
+            }, 5000)
+          }
+        })
+      }
+    }, [props])
+
+    async function betRoullete(color: number) {
+      const weiValue = ethers.parseEther(valueRoulete.toString());
+      const tx = await props.contract.roulete(color, {value: weiValue});
+      await tx.wait();
     }
 
   
     return (
       <div>
-        <button id="spin" onClick={spin}>Spin</button>
+        <h3 style={{color: '#fff', textAlign: 'center'}}>
+          {resultText}
+        </h3>
         <span className="arrow"></span>
         <div className="roulette-container">
             <div className="zero">0</div>
@@ -86,6 +171,25 @@ export function Roulete() {
             <div className="three">3</div>
             <div className="twenty-six">26</div>
 
+        </div>
+
+        <div className="roueltte-bet-container">
+          
+          <div>
+            <button className="spin" style={{backgroundColor: 'red'}} onClick={() => betRoullete(1)}>Red</button>
+            <button className="spin" style={{backgroundColor: 'black'}} onClick={() => betRoullete(2)}>Black</button>
+            <button className="spin"  style={{backgroundColor: 'green'}} onClick={() => betRoullete(0)}>Green</button>
+          </div>
+          <div className='input-value'>
+            <span  className='label'>BET VALUE IN ETH: </span>
+            <input className='' step="any" type='number' onChange={(e) => {
+              const re = /^[0-9\b.]+$/;
+              if ( e.target.value[e.target.value.length - 1] === '.' || e.target.value === '' || re.test(e.target.value)) {
+                setValueRoulete(Number(e.target.value))
+              }
+
+            }} />
+          </div>
         </div>
       </div>
     )

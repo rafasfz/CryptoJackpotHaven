@@ -226,12 +226,27 @@ body{
     transform: rotate(calc(360deg/37*36));
 }
 
+.roueltte-bet-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-value {
+    display: column;
+}
+
+.label {
+    color: #fff;
+    margin-right: 10px;
+}
+
 
 
 
 .arrow{
 	position: absolute;
-	top:29%;
+	top:21%;
 	left:50%;
 	transform: translateX(-50%);
 	color:#fff;
@@ -243,20 +258,18 @@ body{
 	font-size:50px;
 }
 
-#spin{
-	position: absolute;
-	top:20%;
+.spin{
+    margin-top: 70px;
+	top:75%;
 	left:50%;
 	transform:translate(-50%,-50%);
 	z-index:10;
-	background-color: #e2e2e2;
 	text-transform: uppercase;
-	border:8px solid #fff;
 	font-weight:bold;
 	font-size:20px;
 	color:#a2a2a2;
-	width: 80px;
-	height:80px;
+	width: 100px;
+	height:100px;
 	font-family: sans-serif;
 	border-radius:50%;
 	cursor: pointer;
