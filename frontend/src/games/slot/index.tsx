@@ -20,28 +20,75 @@ const images = [
 
 // @ts-expect-error ...
 export const Slot = (props) => {
-  const [randomImage, setRandomImage] = useState<string>(images[0]);
+  const [image1, setImage1] = useState<string>(images[0]);
+  const [image2, setImage2] = useState<string>(images[0]);
+  const [image3, setImage3] = useState<string>(images[0]);
   
-  const [intervalId, setIntervalId] = useState<number | null>(null);
+  const [intervalId1, setIntervalId1] = useState<number | null>(null);
+  const [intervalId2, setIntervalId2] = useState<number | null>(null);
+  const [intervalId3, setIntervalId3] = useState<number | null>(null);
+
+  const [randomize, setRandomize] = useState<boolean>(true);
+  
   useEffect(() => {
-    const changeImage = () => {
+    if (randomize) {
+      return randomizeImages();
+    }
+  }, [randomize])
+
+  function randomizeImages() {
+    const changeImage1 = () => {
       const randomIndex = Math.floor(Math.random() * images.length);
-      setRandomImage(images[randomIndex]);
+      setImage1(images[randomIndex]);
     };
 
-    const id = setInterval(changeImage, 100);
+    const changeImage2 = () => {
+      const randomIndex = Math.floor(Math.random() * images.length);
+      setImage2(images[randomIndex]);
+    };
+
+    const changeImage3 = () => {
+      const randomIndex = Math.floor(Math.random() * images.length);
+      setImage3(images[randomIndex]);
+    };
+
+    const id1 = setInterval(changeImage1, 100);
+    const id2 = setInterval(changeImage2, 100);
+    const id3 = setInterval(changeImage3, 100);
     // @ts-expect-error ...
-    setIntervalId(id);
+    setIntervalId1(id1);
+    // @ts-expect-error ...
+    setIntervalId2(id2);
+    // @ts-expect-error ...
+    setIntervalId3(id3);
 
     return () => {
-      clearInterval(id);
+      clearInterval(id1);
+      clearInterval(id2);
+      clearInterval(id3);
     };
-  }, [images]);
+  }
 
-  const handleButtonClick = () => {
-    // @ts-expect-error ...
-    clearInterval(intervalId);
+  async function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  const handleButtonClick = async () => {
+      setRandomize(true);
+
+      await sleep(1000);
+      // @ts-expect-error ...
+      clearInterval(intervalId1);
+      await sleep(1000);
+      // @ts-expect-error ...
+      clearInterval(intervalId2);
+      await sleep(1000);
+      // @ts-expect-error ...
+      clearInterval(intervalId3);
+
+      setRandomize(false);
   };
+
 
   return (
     <div className='slot-container'>
@@ -53,9 +100,9 @@ export const Slot = (props) => {
         <p>3x jokers you win 50x yout bet value</p>
         <p>Joker also substitute any other value</p>
       </div>
-      <img src={randomImage} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
-      <img src={randomImage} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
-      <img src={randomImage} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
+      <img src={image1} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
+      <img src={image2} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
+      <img src={image3} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
       <div>
       <button onClick={handleButtonClick}>Parar Troca</button>
       </div>

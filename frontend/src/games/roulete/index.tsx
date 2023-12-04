@@ -183,9 +183,9 @@ export function Roulete(props: RoueleteProps) {
         <div className="roueltte-bet-container">
           
           <div>
-            <button className="spin" style={{backgroundColor: 'red'}} onClick={() => betRoullete(1)}>Red</button>
-            <button className="spin" style={{backgroundColor: 'black'}} onClick={() => betRoullete(2)}>Black</button>
-            <button className="spin"  style={{backgroundColor: 'green'}} onClick={() => betRoullete(0)}>Green</button>
+            <button className="spin" style={{backgroundColor: 'red'}} onClick={() => betRoullete(1)}></button>
+            <button className="spin" style={{backgroundColor: 'black'}} onClick={() => betRoullete(2)}></button>
+            <button className="spin"  style={{backgroundColor: 'green'}} onClick={() => betRoullete(0)}></button>
           </div>
           <div className='input-value'>
             <span  className='label'>BET VALUE IN ETH: </span>
