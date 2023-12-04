@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { ethers } from 'ethers';
 import { ToastContainer } from 'react-toastify';
+import { Slot } from './games/slot';
 
 declare global {
   interface Window{
@@ -28,6 +29,7 @@ function App() {
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null)
   const [signer, setSigner] = useState<ethers.JsonRpcSigner | null>(null)
   const [contract, setContract] = useState<ethers.Contract | null>(null)
+  const [currentGame, setCurrentGame] = useState<'roulette' | 'slot'>('roulette')
 
   async function updateBallance() {
     if (contract) {
@@ -111,17 +113,17 @@ function App() {
           <div className="container">
             <img src={logo} className="img-fluid nav-logo-desktop" alt="Company Logo" />
             <ul className="navbar-nav ml-auto nav-right" data-easing="easeInOutExpo" data-speed="1250" data-offset="65">
+              {accountWallet && 
+              <>
               <li className="nav-item nav-custom-link">
-                <a className="nav-link">Roulete <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
-              </li>
-              <li className="nav-item nav-custom-link">
-                <a className="nav-link">Slot Machine <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
-              </li>
-              <li className="nav-item nav-custom-link">
-                <a className="nav-link">Spin <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
-              </li>
+                <a className="nav-link" onClick={() => setCurrentGame('roulette')} style={currentGame === 'roulette' ? {backgroundColor: 'lightblue'} : {}}>Roulette <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
+                </li>
+                <li className="nav-item nav-custom-link">
+                  <a className="nav-link" onClick={() => setCurrentGame('slot')} style={currentGame === 'slot' ? {backgroundColor: 'lightblue'} : {}}>Slot Machine <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
+                </li></>}
               <li className="">
                 {accountWallet && <div className='nav-item nav-custom-link' style={{display: 'flex', flexDirection: 'row'}}>
+                
                   <span className="nav-link">Wallet address: {accountWalletFormatted()}</span>
                     <a className="nav-link">Ballance: {ballance}</a>
                   <button className="nav-link" onClick={withdraw}>
@@ -136,7 +138,8 @@ function App() {
         </div>
       </nav>
 
-      {provider && signer && contract && <Roulete provider={provider} signer={signer} contract={contract} updateBallance={updateBallance} accountWallet={accountWallet} />}
+      {provider && signer && contract && currentGame === 'roulette' && <Roulete provider={provider} signer={signer} contract={contract} updateBallance={updateBallance} accountWallet={accountWallet} />}
+      {provider && signer && contract && currentGame === 'slot' && <Slot provider={provider} signer={signer} contract={contract} updateBallance={updateBallance} accountWallet={accountWallet} />}
     </>
   )
 }

@@ -245,9 +245,10 @@ body{
 
 
 .arrow{
-	position: absolute;
-	top:21%;
-	left:50%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    margin-left: 47%;
 	transform: translateX(-50%);
 	color:#fff;
     z-index: 10;
@@ -275,4 +276,13 @@ body{
 	cursor: pointer;
 	outline:none;
 	letter-spacing: 1px;
+}
+
+.slot-container {
+    color: white;
+}
+
+.rules, .rules p {
+    color: white;
+    font-size: 20px;
 }

@@ -128,6 +128,11 @@ export function Roulete(props: RoueleteProps) {
   
     return (
       <div>
+      <div className='rules'>
+        <h1>Rules: </h1>
+        <p>Green pays 14x bet value</p>
+        <p>Red and Black pays 2x bet value</p>
+      </div>
         <h3 style={{color: '#fff', textAlign: 'center'}}>
           {resultText}
         </h3>
