@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './styles.css'
 import { ethers } from 'ethers';
 
@@ -24,9 +24,9 @@ export const Slot = (props) => {
   const [image2, setImage2] = useState<string>(images[0]);
   const [image3, setImage3] = useState<string>(images[0]);
   
-  const [intervalId1, setIntervalId1] = useState<number | null>(null);
-  const [intervalId2, setIntervalId2] = useState<number | null>(null);
-  const [intervalId3, setIntervalId3] = useState<number | null>(null);
+  const intervalId1 = useRef<number | null>(null);
+  const intervalId2 = useRef<number | null>(null);
+  const intervalId3 = useRef<number | null>(null);
 
   const [randomize, setRandomize] = useState<boolean>(true);
   
@@ -56,11 +56,11 @@ export const Slot = (props) => {
     const id2 = setInterval(changeImage2, 100);
     const id3 = setInterval(changeImage3, 100);
     // @ts-expect-error ...
-    setIntervalId1(id1);
+    intervalId1.current = id1;
     // @ts-expect-error ...
-    setIntervalId2(id2);
+    intervalId2.current = id2;
     // @ts-expect-error ...
-    setIntervalId3(id3);
+    intervalId3.current = id3;
 
     return () => {
       clearInterval(id1);
@@ -78,13 +78,13 @@ export const Slot = (props) => {
 
       await sleep(1000);
       // @ts-expect-error ...
-      clearInterval(intervalId1);
+      clearInterval(intervalId1.current);
       await sleep(1000);
       // @ts-expect-error ...
-      clearInterval(intervalId2);
+      clearInterval(intervalId2.current);
       await sleep(1000);
       // @ts-expect-error ...
-      clearInterval(intervalId3);
+      clearInterval(intervalId3.current);
 
       setRandomize(false);
   };
