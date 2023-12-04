@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './styles.css'
 import { ethers } from 'ethers';
 
+// @ts-expect-error ...
 interface SlotProps {
   provider: ethers.BrowserProvider;
   signer: ethers.JsonRpcSigner;
@@ -17,6 +18,7 @@ const images = [
   'https://jphoenixbrasil.com/wp-content/uploads/2022/08/haha.jpg',
 ];
 
+// @ts-expect-error ...
 export const Slot = (props) => {
   const [randomImage, setRandomImage] = useState<string>(images[0]);
   
@@ -28,6 +30,7 @@ export const Slot = (props) => {
     };
 
     const id = setInterval(changeImage, 100);
+    // @ts-expect-error ...
     setIntervalId(id);
 
     return () => {
@@ -36,6 +39,7 @@ export const Slot = (props) => {
   }, [images]);
 
   const handleButtonClick = () => {
+    // @ts-expect-error ...
     clearInterval(intervalId);
   };
 

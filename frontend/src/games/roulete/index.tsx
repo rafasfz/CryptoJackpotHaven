@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import './styles.css'
 import { ethers } from 'ethers';
-import { toast } from 'react-toastify';
 
 interface RoueleteProps {
   provider: ethers.BrowserProvider;
@@ -58,7 +57,9 @@ export function Roulete(props: RoueleteProps) {
 
     useEffect(() => {
       const container = document.querySelector(".roulette-container") as Element;
+      // @ts-expect-error ...
       container.style.transform = `rotate(${degrees}deg)`;
+      // @ts-expect-error ...
       container.style.transition = 'transform 2s ease-in-out';
   }, [degrees]);
 
@@ -72,7 +73,8 @@ export function Roulete(props: RoueleteProps) {
 
     async function spin(target: number) {
       const totalRotationTime = 1000;
-      const targetDegree = degreesByNumber[target] as number;
+      // @ts-expect-error ...
+      const targetDegree = degreesByNumber[target];
       
       const startTime = Date.now();
     
@@ -92,7 +94,7 @@ export function Roulete(props: RoueleteProps) {
     useEffect(() => {
       if (props.contract) {
         props.contract.on("RouletteResponse", async (winner, number, value) => {
-          if (winner.toLocaleLowerCase() == props.accountWallet.toLowerCase()) {
+          if (props.accountWallet && winner.toLocaleLowerCase() == props.accountWallet.toLowerCase()) {
             await spin(number);
             setResultText('')
             setTimeout(async () => {
@@ -107,7 +109,7 @@ export function Roulete(props: RoueleteProps) {
     useEffect(() => {
       if (props.contract) {
         props.contract.on("RouletteLost", async (loser, number) => {
-          if (loser.toLowerCase() == props.accountWallet.toLowerCase()) {
+          if (props.accountWallet && loser.toLowerCase() == props.accountWallet.toLowerCase()) {
             await spin(number);
             await props.updateBallance();
             setResultText('')

@@ -44,7 +44,7 @@ function App() {
 
   async function updateBallance() {
     if (contract) {
-      setBallance(ethers.formatEther(await contract.getBalance()));
+      setBallance(Number(ethers.formatEther(await contract.getBalance())));
     }
   }
 
@@ -56,7 +56,7 @@ function App() {
     try {
       const accounts = await window.ethereum.request({ 
         method: 'eth_requestAccounts' 
-      });
+      }) as string[];
 
       setAccountWallet(accounts[0])
     } catch (error) {
@@ -75,7 +75,7 @@ function App() {
       setProvider(provider)
       setSigner(signer)
       setContract(contract)
-      setBallance(ethers.formatEther(await contract.getBalance()));
+      setBallance(Number(ethers.formatEther(await contract.getBalance())));
 
     }
   }
