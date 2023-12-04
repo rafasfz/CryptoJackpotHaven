@@ -27,7 +27,7 @@ export const Slot = (props) => {
       setRandomImage(images[randomIndex]);
     };
 
-    const id = setInterval(changeImage, 50);
+    const id = setInterval(changeImage, 100);
     setIntervalId(id);
 
     return () => {
@@ -49,9 +49,9 @@ export const Slot = (props) => {
         <p>3x jokers you win 50x yout bet value</p>
         <p>Joker also substitute any other value</p>
       </div>
-      <img src={randomImage} alt="Imagem Aleatória" style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
-      <img src={randomImage} alt="Imagem Aleatória" style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
-      <img src={randomImage} alt="Imagem Aleatória" style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
+      <img src={randomImage} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
+      <img src={randomImage} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
+      <img src={randomImage} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
       <div>
       <button onClick={handleButtonClick}>Parar Troca</button>
       </div>

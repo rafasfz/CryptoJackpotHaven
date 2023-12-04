@@ -14,13 +14,14 @@ declare global {
 }
 
 const abi = [
-  "function withDrawProfits(uint value)",
+  "function withdrawBalance() public",
   "function getBalance() view returns (uint)",
   "function roulete(uint8 choice) payable public returns (tuple(uint number, uint winValue) memory)",
   "function slotMachine() payable public returns (tuple(uint8[3] symbols, uint winValue) memory)",
   "event RouletteResponse(address winner, uint256 number, uint256 value)",
   "event RouletteLost(address loser, uint256 number)",
-  "event UpdateBallance(address player, uint256 value)"
+  "event WithdrawBallance(address player)",
+  "event SlotsResult(address player, uint8[3] symbols, uint256 value)"
 ]
 
 function App() {
@@ -30,6 +31,16 @@ function App() {
   const [signer, setSigner] = useState<ethers.JsonRpcSigner | null>(null)
   const [contract, setContract] = useState<ethers.Contract | null>(null)
   const [currentGame, setCurrentGame] = useState<'roulette' | 'slot'>('roulette')
+
+  useEffect(() => {
+    if (contract) {
+      contract.on('WithdrawBallance', (player) => {
+        if (player.toLowerCase() === accountWallet?.toLowerCase()) {
+          setBallance(0)
+        }
+      })
+    }
+  }, [contract])
 
   async function updateBallance() {
     if (contract) {
@@ -79,7 +90,7 @@ function App() {
 
   async function withdraw() {
     if (contract && signer) {
-      await contract.withDrawProfits(ethers.parseEther(String(ballance) || '0.0'))
+      await contract.withdrawBalance()
       setTimeout(async () => {
         await updateBallance()
       }, 500)
