@@ -15,6 +15,7 @@ export function Roulete(props: RoueleteProps) {
 
     const [degrees, setDegrees] = useState<number>(0);
     const [valueRoulete, setValueRoulete] = useState<number>(0);
+    // @ts-expect-error ...
     const [resultText, setResultText] = useState<string>('');
     const degreesByNumber = {
       0: 0,
