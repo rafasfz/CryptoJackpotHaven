@@ -11,7 +11,8 @@ contract CryptoJackpotHaven {
 
     event RouletteResponse(address winner, uint256 number, uint256 value);
     event RouletteLost(address loser, uint256 number);
-    event UpdateBallance(address player, uint256 value);
+    event WithdrawBallance(address player);
+    event SlotsResult(address player, SlotsSymbols[3] symbols, uint256 value);
     
     function withDrawProfits(uint value) public {
         require(msg.sender == owner, "You are not the owner");
@@ -28,6 +29,7 @@ contract CryptoJackpotHaven {
 
         payable(msg.sender).transfer(balance[msg.sender]);
         balance[msg.sender] = 0;
+        emit WithdrawBallance(msg.sender);
     }
 
     function getBalance() public view returns (uint) {
@@ -83,7 +85,6 @@ contract CryptoJackpotHaven {
         }
 
         balance[msg.sender] += winValue;
-        emit UpdateBallance(msg.sender, balance[msg.sender]);
         output.winValue = winValue;
 
         if (winValue == 0) {
@@ -176,6 +177,7 @@ contract CryptoJackpotHaven {
 
         OutputsSlotMachine memory output = OutputsSlotMachine(symbols, winValue);
 
+        emit SlotsResult(msg.sender, symbols, winValue);
         return output;
 
     }
