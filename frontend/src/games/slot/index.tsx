@@ -24,6 +24,7 @@ export const Slot = (props) => {
   const [image2, setImage2] = useState<string>(images[0]);
   const [image3, setImage3] = useState<string>(images[0]);
   
+  
   const intervalId1 = useRef<number | null>(null);
   const intervalId2 = useRef<number | null>(null);
   const intervalId3 = useRef<number | null>(null);

@@ -4,8 +4,10 @@ import { Roulete } from './games/roulete'
 import { useEffect, useState } from 'react'
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { ethers } from 'ethers';
-import { ToastContainer } from 'react-toastify';
 import { Slot } from './games/slot';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 declare global {
   interface Window{
@@ -112,8 +114,6 @@ function App() {
               pauseOnHover
               theme="light"
               />
-              {/* Same as */}
-              <ToastContainer />
         
         <nav className="navbar navbar-default navbar-expand-lg fixed-top custom-navbar">
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">

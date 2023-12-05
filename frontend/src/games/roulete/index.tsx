@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './styles.css'
 import { ethers } from 'ethers';
+import { toast } from 'react-toastify';
 
 interface RoueleteProps {
   provider: ethers.BrowserProvider;
@@ -91,20 +92,34 @@ export function Roulete(props: RoueleteProps) {
       rotate();
     }
 
+
+  async function sleep(ms: number) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+  
+
     useEffect(() => {
       if (props.contract) {
         props.contract.on("RouletteResponse", async (winner, number, value) => {
           if (props.accountWallet && winner.toLocaleLowerCase() == props.accountWallet.toLowerCase()) {
             await spin(number);
-            setResultText('')
-            setTimeout(async () => {
-              setResultText(`You won ${ethers.formatEther(value)} ETH`);
-              await props.updateBallance();
-            }, 5000)
+            await sleep(5000)
+            console.log('asdasd');
+            toast.success(`You won ${ethers.formatEther(value)} ETH`, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              });
+            await props.updateBallance();
           }
         })
       }
-    }, [props])
+    }, [])
 
     useEffect(() => {
       if (props.contract) {
@@ -112,24 +127,48 @@ export function Roulete(props: RoueleteProps) {
           if (props.accountWallet && loser.toLowerCase() == props.accountWallet.toLowerCase()) {
             await spin(number);
             await props.updateBallance();
-            setResultText('')
-            setTimeout(() => {
-              setResultText(`You lost :(`);
-            }, 5000)
+            await sleep(5000)
+            console.log('asdasd');
+              toast.warning(`You lost :(`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                });
           }
         })
       }
-    }, [props])
+    }, [])
 
     async function betRoullete(color: number) {
-      const weiValue = ethers.parseEther(valueRoulete.toString());
-      const tx = await props.contract.roulete(color, {value: weiValue});
-      await tx.wait();
+      try {
+        const weiValue = ethers.parseEther(valueRoulete.toString());
+        const tx = await props.contract.roulete(color, {value: weiValue});
+        await tx.wait();
+      } catch(e) {
+        toast.error(`Something went wrong :(`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
+      }
+      
     }
 
   
     return (
       <div>
+
+
       <div className='rules'>
         <h1>Rules: </h1>
         <p>Green pays 14x bet value</p>
