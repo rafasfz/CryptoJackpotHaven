@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './styles.css'
 import { ethers } from 'ethers';
+import { toast } from 'react-toastify';
 
 // @ts-expect-error ...
 interface SlotProps {
@@ -30,6 +31,7 @@ export const Slot = (props) => {
   const intervalId3 = useRef<number | null>(null);
 
   const [randomize, setRandomize] = useState<boolean>(true);
+  const [valueRoulete, setValueRoulete] = useState<number>(0);
   
   useEffect(() => {
     if (randomize) {
@@ -77,18 +79,69 @@ export const Slot = (props) => {
   const handleButtonClick = async () => {
       setRandomize(true);
 
-      await sleep(1000);
-      // @ts-expect-error ...
-      clearInterval(intervalId1.current);
-      await sleep(1000);
-      // @ts-expect-error ...
-      clearInterval(intervalId2.current);
-      await sleep(1000);
-      // @ts-expect-error ...
-      clearInterval(intervalId3.current);
-
-      setRandomize(false);
+      try {
+        const weiValue = ethers.parseEther(valueRoulete.toString());
+        const tx = await props.contract.slotMachine({value: weiValue});
+        await tx.wait();
+      } catch(e) {
+        toast.error(`Something went wrong :(`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
+      }
   };
+
+  useEffect(() => {
+    props.contract.on('SlotsResult', async (player: string, resultsNumber: number[], value: number) => {
+      if (props.accountWallet && player.toLowerCase() == props.accountWallet.toLowerCase()) {
+        console.log(resultsNumber);
+        console.log(value);
+        console.log(typeof resultsNumber)
+        // @ts-expect-error ...
+        clearInterval(intervalId1.current);
+        setImage1(images[resultsNumber[0]]);
+        await sleep(1000);
+        // @ts-expect-error ...
+        clearInterval(intervalId2.current);
+        setImage2(images[resultsNumber[1]]);
+        await sleep(1000);
+        // @ts-expect-error ...
+        clearInterval(intervalId3.current);
+        setImage3(images[resultsNumber[2]]);
+        setRandomize(false);
+        if (value == 0) {
+          toast.warning(`You lost :(`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            });
+        } else {
+          toast.success(`You won ${ethers.formatEther(value)} ETH`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            });
+        }
+        await props.updateBallance();
+      }
+    })
+  }, [])
 
 
   return (
@@ -104,8 +157,18 @@ export const Slot = (props) => {
       <img src={image1} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
       <img src={image2} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
       <img src={image3} alt="Casino image" className='slot-image' style={{ width: '300px', height: '300px',  objectFit: 'cover', }} />
-      <div>
-      <button onClick={handleButtonClick}>Parar Troca</button>
+      <div className='roueltte-bet-container'>
+      <div className='input-value'>
+            <span  className='label'>BET VALUE IN ETH: </span>
+            <input className='' step="any" type='number' onChange={(e) => {
+              const re = /^[0-9\b.]+$/;
+              if ( e.target.value[e.target.value.length - 1] === '.' || e.target.value === '' || re.test(e.target.value)) {
+                setValueRoulete(Number(e.target.value))
+              }
+
+            }} />
+          </div>
+      <button onClick={handleButtonClick} style={{marginTop: '10px'}}>Roll machine</button>
       </div>
     </div>
   );

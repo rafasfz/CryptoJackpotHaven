@@ -127,10 +127,10 @@ function App() {
               {accountWallet && 
               <>
               <li className="nav-item nav-custom-link">
-                <a className="nav-link" onClick={() => setCurrentGame('roulette')} style={currentGame === 'roulette' ? {backgroundColor: 'lightblue'} : {}}>Roulette <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
+                <a className="nav-link games" onClick={() => setCurrentGame('roulette')} style={currentGame === 'roulette' ? {backgroundColor: 'lightblue'} : {}}>Roulette <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
                 </li>
                 <li className="nav-item nav-custom-link">
-                  <a className="nav-link" onClick={() => setCurrentGame('slot')} style={currentGame === 'slot' ? {backgroundColor: 'lightblue'} : {}}>Slot Machine <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
+                  <a className="nav-link games" onClick={() => setCurrentGame('slot')} style={currentGame === 'slot' ? {backgroundColor: 'lightblue'} : {}}>Slot Machine <i className="icon ion-ios-arrow-forward icon-mobile"></i></a>
                 </li></>}
               <li className="">
                 {accountWallet && <div className='nav-item nav-custom-link' style={{display: 'flex', flexDirection: 'row'}}>

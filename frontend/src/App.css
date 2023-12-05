@@ -297,6 +297,10 @@ section {
   background-size: cover;
 }
 
+.games {
+	cursor: pointer;
+}
+
 .review-one {
   background-image: url('images/profile-picture-one.jpg');
 }
@@ -632,4 +636,8 @@ footer small {
 		margin-top: 4px;
 		margin-left: 10px;
 	}
+}
+
+button {
+	cursor: pointer;
 }

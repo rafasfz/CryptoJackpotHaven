@@ -116,6 +116,17 @@ contract CryptoJackpotHaven {
             else if (symbol1 == SlotsSymbols.JOKER) {
                 return JOKER_ODD;
             }
+        } else {
+            if ((symbol1 == SlotsSymbols.HEART && symbol2 == SlotsSymbols.JOKER) || (symbol2 == SlotsSymbols.HEART && symbol1 == SlotsSymbols.JOKER)) {
+                return HEART_ODD;
+            } else if ((symbol1 == SlotsSymbols.STAR && symbol2 == SlotsSymbols.JOKER) || (symbol2 == SlotsSymbols.STAR && symbol1 == SlotsSymbols.JOKER)) {
+                return STAR_ODD;
+            } else if ((symbol1 == SlotsSymbols.DIAMOND && symbol2 == SlotsSymbols.JOKER) || (symbol2 == SlotsSymbols.DIAMOND && symbol1 == SlotsSymbols.JOKER)) {
+                return DIAMOND_ODD;
+            }
+            else if ((symbol1 == SlotsSymbols.JOKER && symbol2 == SlotsSymbols.JOKER)) {
+                return JOKER_ODD;
+            }
         }
         return 0;
     }
@@ -167,13 +178,19 @@ contract CryptoJackpotHaven {
         uint256 betValue = msg.value;
         require(betValue > 0, "You need to bet something");
 
-        uint firstSpin = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender))) % 100;
-        uint secondSpin = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender))) >> 3 % 100;
-        uint thirdSpin = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender))) >> 6 % 100;
+        uint seed = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender)));
+        uint random = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, seed)));
+        uint firstSpin = random % 100;
+        seed = random;
+        random = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, seed)));
+        uint secondSpin = random % 100;
+        random = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, seed)));
+        uint thirdSpin = random % 100;
 
-        SlotsSymbols[3] memory symbols = [ getSymbolByRgn(firstSpin), SlotsSymbols(secondSpin), SlotsSymbols(thirdSpin) ];
+        SlotsSymbols[3] memory symbols = [ getSymbolByRgn(firstSpin), getSymbolByRgn(secondSpin), getSymbolByRgn(thirdSpin) ];
 
         uint256 winValue = betValue * getPayoutBySymbol(symbols[0], symbols[1], symbols[2]);
+        balance[msg.sender] += winValue;
 
         OutputsSlotMachine memory output = OutputsSlotMachine(symbols, winValue);
 
