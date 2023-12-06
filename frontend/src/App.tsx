@@ -148,7 +148,8 @@ function App() {
           </div>
         </div>
       </nav>
-
+      
+      {(!provider || !signer || !contract) && <h1 style={{color: '#fff'}}>Join with metamask to play</h1>}
       {provider && signer && contract && currentGame === 'roulette' && <Roulete provider={provider} signer={signer} contract={contract} updateBallance={updateBallance} accountWallet={accountWallet} />}
       {provider && signer && contract && currentGame === 'slot' && <Slot provider={provider} signer={signer} contract={contract} updateBallance={updateBallance} accountWallet={accountWallet} />}
     </>
