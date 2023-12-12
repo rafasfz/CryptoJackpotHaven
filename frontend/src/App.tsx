@@ -93,7 +93,8 @@ function App() {
   }
 
   function isAdmin() {
-    return accountWallet === "0xF9639b0225fEB851Fb5FfFA210BC5F39e368568e".toLowerCase() || accountWallet === "0x8AF6A3eE67e881C04a01a23D37C465f003cE6863".toLowerCase();
+    return accountWallet === "0xF9639b0225fEB851Fb5FfFA210BC5F39e368568e".toLowerCase() ||
+    accountWallet === "0x8AF6A3eE67e881C04a01a23D37C465f003cE6863".toLowerCase();
   }
 
   return (
