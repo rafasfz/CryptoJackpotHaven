@@ -1,0 +1,379 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_teamA",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_teamB",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_logoA",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_logoB",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_tournament",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_startTime",
+				"type": "string"
+			}
+		],
+		"name": "createMatch",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_matchId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_winningOutcome",
+				"type": "uint256"
+			}
+		],
+		"name": "finalizeMatch",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_matchId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_outcome",
+				"type": "uint256"
+			}
+		],
+		"name": "placeBet",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "enum CryptoJackpotHaven.RouleteChoices",
+				"name": "choice",
+				"type": "uint8"
+			}
+		],
+		"name": "roulete",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "number",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "winValue",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct CryptoJackpotHaven.OutputsRoulete",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "loser",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "number",
+				"type": "uint256"
+			}
+		],
+		"name": "RouletteLost",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "winner",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "number",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "RouletteResponse",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "slotMachine",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "enum CryptoJackpotHaven.SlotsSymbols[3]",
+						"name": "symbols",
+						"type": "uint8[3]"
+					},
+					{
+						"internalType": "uint256",
+						"name": "winValue",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct CryptoJackpotHaven.OutputsSlotMachine",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "player",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "enum CryptoJackpotHaven.SlotsSymbols[3]",
+				"name": "symbols",
+				"type": "uint8[3]"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "SlotsResult",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "withdrawBalance",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "player",
+				"type": "address"
+			}
+		],
+		"name": "WithdrawBallance",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "withDrawProfits",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getMatches",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "matchId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "teamA",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "logoTeamA",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "teamB",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "logoTeamB",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "date",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "tournament",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CryptoJackpotHaven.MatchSummary[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "matchCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "matches",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "matchId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "teamA",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "logoTeamA",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "teamB",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "logoTeamB",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "date",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "tournament",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "teamAWins",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "teamBWins",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "draws",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

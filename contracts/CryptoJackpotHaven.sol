@@ -6,7 +6,7 @@ contract CryptoJackpotHaven {
     address private owner;
 
     constructor() {
-        owner = msg.sender;
+        owner = msg.sender;        
     }
 
     event RouletteResponse(address winner, uint256 number, uint256 value);
@@ -196,7 +196,177 @@ contract CryptoJackpotHaven {
 
         emit SlotsResult(msg.sender, symbols, winValue);
         return output;
+    }
 
+    struct Match {
+        uint256 matchId;
+        string teamA;
+        string logoTeamA;
+        string teamB;
+        string logoTeamB;
+        string date;
+        string tournament;
+        uint256 teamAWins;
+        uint256 teamBWins;        
+        uint256 draws;        
+        mapping (address => Bet) bets;
+        address[] bettors;        
+    }
+
+    struct Bet {
+        uint256 amount;
+        uint256 outcome; // 0 for Team A, 1 for Draw, 2 for team b
+    }
+
+    mapping(uint256 => Match) public matches;
+    uint256 public matchCount;
+    
+    function createMatch(
+        string memory _teamA,
+        string memory _teamB,
+        string memory _logoA,
+        string memory _logoB,
+        string memory _tournament,
+        string memory _startTime
+    ) public {
+        require(msg.sender == owner, "You are not the owner");
+        matchCount++;
+        Match storage newMatch = matches[matchCount];
+        initializeMatch(newMatch, _teamA, _logoA, _teamB, _logoB, _startTime, _tournament);
+    }
+
+    function initializeMatch(
+        Match storage _match,
+        string memory _teamA,
+        string memory _logoA,
+        string memory _teamB,
+        string memory _logoB,
+        string memory _startTime,
+        string memory _tournament
+    ) internal {
+        _match.matchId = matchCount;
+        _match.teamA = _teamA;
+        _match.logoTeamA = _logoA;
+        _match.teamB = _teamB;
+        _match.logoTeamB = _logoB;
+        _match.date = _startTime;
+        _match.tournament = _tournament;
+        _match.teamAWins = 0;
+        _match.teamBWins = 0;
+        _match.draws = 0;        
+        _match.bettors;
+    }
+
+    function placeBet(uint256 _matchId, uint256 _outcome) external payable {
+        require(_outcome <= 2, "Invalid outcome");                
+        Match storage matchInstance = matches[_matchId];        
+
+        Bet storage userBet = matchInstance.bets[msg.sender];
+        require(userBet.amount == 0, "You already placed a bet");
+
+        userBet.amount = msg.value;
+        userBet.outcome = _outcome;
+
+        if (_outcome == 0) {
+            matchInstance.teamAWins += msg.value;
+        } else if (_outcome == 1) {
+            matchInstance.draws += msg.value;            
+        } else {            
+            matchInstance.teamBWins += msg.value;
+        }
+
+        matchInstance.bettors.push(msg.sender);                
+    }    
+
+    function finalizeMatch(uint256 _matchId, uint256 _winningOutcome) public {        
+
+        Match storage matchInstance = matches[_matchId];        
+
+
+        uint256 totalPool = matchInstance.teamAWins + matchInstance.teamBWins + matchInstance.draws;
+
+        if (_winningOutcome == 0) {
+            distributePrizes(matchInstance, matchInstance.teamAWins, totalPool, matchInstance.bets, 0);
+        } else if (_winningOutcome == 1) {
+            distributePrizes(matchInstance, matchInstance.draws, totalPool, matchInstance.bets, 1);
+        } else {
+            distributePrizes(matchInstance, matchInstance.teamBWins, totalPool, matchInstance.bets, 2);
+        }        
+
+        delete matches[_matchId];
+    }
+
+    function distributePrizes(Match storage matchInstance, uint256 _totalWinningAmount, uint256 _totalPool, mapping(address => Bet) storage _bets, uint256 _winningOutcome) internal {            
+        require(_winningOutcome <= 2, "Invalid winning outcome");
+
+        if ((matchInstance.draws != 0 && matchInstance.teamAWins != 0) ||
+            (matchInstance.draws != 0 && matchInstance.teamBWins != 0) ||
+            (matchInstance.teamAWins != 0 && matchInstance.teamBWins != 0)) {
+            uint256 tax = (_totalPool * 10) / 100;
+            _totalPool -= tax;  
+            payable(msg.sender).transfer(tax);
+        }
+        
+        //se ninguém venceu, então recebo todo o prêmio
+        if (_totalWinningAmount == 0) {
+            payable(msg.sender).transfer(_totalPool);
+        } else {
+            // Distribuir prêmios proporcionalmente
+            for (uint256 i = 0; i < matchInstance.bettors.length; i++) {        
+                Bet storage userBet = _bets[matchInstance.bettors[i]];
+                
+                if (userBet.outcome == _winningOutcome) {                
+                    uint256 userShare = (userBet.amount * _totalPool) / _totalWinningAmount;                
+                    balance[matchInstance.bettors[i]] += userShare;                
+                }
+            }    
+        }        
+    }
+
+    // nova struct para armazenar informações resumidas sobre uma partida
+    struct MatchSummary {
+        uint256 matchId;
+        string teamA;
+        string logoTeamA;
+        string teamB;
+        string logoTeamB;
+        string date;
+        string tournament;        
     }
     
+
+    function getMatches() external view returns (MatchSummary[] memory) {        
+        uint256 validMatchesCount = 0;
+        
+        for (uint256 i = 1; i <= matchCount; i++) {
+            if (matches[i].matchId != 0) {
+                validMatchesCount++;
+            }
+        }
+        
+        MatchSummary[] memory matchSummaries = new MatchSummary[](validMatchesCount);
+        
+        uint256 index = 0;
+        
+        for (uint256 i = 1; i <= matchCount; i++) {
+            if (matches[i].matchId != 0) {
+                matchSummaries[index] = MatchSummary({
+                    matchId: matches[i].matchId,
+                    teamA: matches[i].teamA,
+                    logoTeamA: matches[i].logoTeamA,
+                    teamB: matches[i].teamB,
+                    logoTeamB: matches[i].logoTeamB,
+                    date: matches[i].date,
+                    tournament: matches[i].tournament
+                });
+                index++;
+            }
+        }
+
+        return matchSummaries;
+    }
+
+
 }
+
+

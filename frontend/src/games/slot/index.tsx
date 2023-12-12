@@ -81,7 +81,8 @@ export const Slot = (props) => {
 
       try {
         const weiValue = ethers.parseEther(valueRoulete.toString());
-        const tx = await props.contract.slotMachine({value: weiValue});
+        console.log(weiValue);
+        const tx = await props.contract.slotMachine({value: weiValue});        
         await tx.wait();
       } catch(e) {
         toast.error(`Something went wrong :(`, {
@@ -162,7 +163,7 @@ export const Slot = (props) => {
             <span  className='label'>BET VALUE IN ETH: </span>
             <input className='' step="any" type='number' onChange={(e) => {
               const re = /^[0-9\b.]+$/;
-              if ( e.target.value[e.target.value.length - 1] === '.' || e.target.value === '' || re.test(e.target.value)) {
+              if (e.target.value[e.target.value.length - 1] === '.' || e.target.value === '' || re.test(e.target.value)) {
                 setValueRoulete(Number(e.target.value))
               }
 
