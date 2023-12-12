@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './styles.css'
 import { ethers } from 'ethers';
 import 'react-datepicker/dist/react-datepicker.css';

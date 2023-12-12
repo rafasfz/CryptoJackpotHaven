@@ -1,11 +1,11 @@
-import { SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './styles.css'
 import { ethers } from 'ethers';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
 
-
+// @ts-expect-error ...
 export function FootballBettingForm({ contract, accountWallet }: { contract: ethers.Contract, accountWallet: string | null }) {
   const [teamA, setTeamA] = useState('');
   const [teamALogo, setTeamALogo] = useState('');
@@ -14,6 +14,7 @@ export function FootballBettingForm({ contract, accountWallet }: { contract: eth
   const [tournament, setTournament] = useState('');
   const [date, setDate] = useState<Date | null>(null);
   // const [round, setRound] = useState('');
+  // @ts-expect-error ...
   const [matches, setMatches] = useState<any[]>([]);
 
 
