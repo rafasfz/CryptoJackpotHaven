@@ -18,7 +18,7 @@ export function FootballBetting({ contract, accountWallet, updateBallance }: { c
     const updateMatches = async () => {
         if (contract) {
             try {
-                const matchesFromContract = await contract.getMatches();    
+                const matchesFromContract = await contract.getMatches();
                 setMatches(matchesFromContract)
             } catch (error) {
                 console.error('Error updating matches:', error);
@@ -48,7 +48,8 @@ export function FootballBetting({ contract, accountWallet, updateBallance }: { c
     }, [contract, updateMatches]);
 
     function isAdmin() {
-        return accountWallet === "0xF9639b0225fEB851Fb5FfFA210BC5F39e368568e".toLowerCase();
+        return accountWallet === "0xF9639b0225fEB851Fb5FfFA210BC5F39e368568e".toLowerCase() ||
+            accountWallet === "0x8AF6A3eE67e881C04a01a23D37C465f003cE6863".toLowerCase();
     }
 
     const handleMatchClose = async (matchId: number, winningOutcome: string) => {
